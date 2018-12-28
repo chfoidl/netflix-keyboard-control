@@ -6,9 +6,7 @@
         "module": "es6",
         "moduleResolution": "node",
         "target": "es5",
-        "declaration": true,
-        "outDir": "dist/lib",
-        "declarationDir": "dist/types",
+        "declaration": false,
         "lib": [
             "dom",
             "es5",
