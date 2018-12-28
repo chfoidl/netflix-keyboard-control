@@ -1,5 +1,3 @@
-import { getAbsolutePosition } from "./util/dom-util";
-
 export class FocusIndicator {
     private static root: HTMLElement;
 
