@@ -3,6 +3,7 @@ import { Keyboard } from "./navigation/keyboard";
 import { TitleNavigation } from "./navigation/title";
 import { FocusIndicator } from "./focus-indicator";
 import { ProfileNavigation } from "./navigation/profile";
+import { PlayerNavigation } from "./navigation/player";
 
 Keyboard.init();
 
@@ -17,18 +18,20 @@ try {
         } else if (url.match(/title/g)) {
             new TitleNavigation();
         } else if (url.match(/watch/g)) {
+            new PlayerNavigation();
+
             Keyboard.on("Escape", () => {
                 (document.querySelector(".button-nfplayerBack") as HTMLElement).click();
-            })
+            });
         }
-    }
+    };
 
     FocusIndicator.init();
 
     matchUrl(location.href);
 
     const observer = new MutationObserver(mutations => {
-        console.log("mutation...")
+        console.log("mutation...");
         if (document.querySelector(".profiles-gate-container")) {
             location.reload();
         }
@@ -42,5 +45,5 @@ try {
     console.error(e);
 }
 
-Keyboard.on("Home", () => location.href = "https://www.netflix.com/browse");
+Keyboard.on("Home", () => (location.href = "https://www.netflix.com/browse"));
 Keyboard.on("End", () => location.reload());

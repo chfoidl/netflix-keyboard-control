@@ -1,1 +1,805 @@
-!function(){"use strict";var n,i=function(t,e){var o=[];return(e||document).querySelectorAll(t).forEach(function(t){return o.push(t)}),o},c=function(){function o(){}return o.init=function(){document.addEventListener("keydown",o.handleKeyDown)},o.stop=function(){document.removeEventListener("keydown",o.handleKeyDown)},o.on=function(t,e){o.handlerGroups[t]||(o.handlerGroups[t]=[]),o.handlerGroups[t].push(e)},o.off=function(t,e){o.handlerGroups[t]&&(o.handlerGroups[t]=o.handlerGroups[t].filter(function(t){return t!==e}))},o.handleKeyDown=function(e){var t=e.key;(t.includes("Arrow")||t.includes("Enter"))&&e.preventDefault(),o.handlerGroups[t]&&o.handlerGroups[t].forEach(function(t){return t(e)})},o.handlerGroups={},o}();(n||(n={})).Slider=".lolomoRow_title_card:not( .lolomoBigRow )";var s=function(t,e){return(s=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var o in e)e.hasOwnProperty(o)&&(t[o]=e[o])})(t,e)};function r(t,e){function o(){this.constructor=t}s(t,e),t.prototype=null===e?Object.create(e):(o.prototype=e.prototype,new o)}var t,e=function(){function t(){}return t.prototype.isAtTop=function(){return!0},t.prototype.isAtBottom=function(){return!0},t}(),u=function(){function r(){}return r.init=function(){var t=document.createElement("div");t.className="nkc-focus-indicator",t.style.position="absolute",t.style.borderWidth="5px",t.style.borderStyle="solid",t.style.borderImage="linear-gradient(45deg, #ff5e00 0%, #ffbc00 100%) 1 5% / 1 / 0 stretch",t.style.opacity="0",t.style.boxSizing="border-box",document.body.appendChild(t),r.root=t},r.moveToElement=function(t){var e=t.getBoundingClientRect(),o=e.top,n=e.left,i=t.clientWidth,c=t.clientHeight,s=r.root;o+=window.scrollY,n+=window.scrollX,s.style.top=o-7+"px",s.style.left=n-5+"px",s.style.width=i+10+"px",s.style.height=c+14+"px",s.style.opacity="1"},r.hide=function(){r.root.style.opacity="0"},r}(),a=function(n){function t(t,e){var o=n.call(this)||this;return o.hasMultiplePages=!1,o.hasMoved=!1,o.moveLeft=function(){o.focusPreviousSlide()},o.moveRight=function(){o.focusNextSlide()},o.activate=function(){o.onActivate&&o.currentSlide&&o.onActivate(o.currentSlide)},o.root=t,o.onActivate=e,o.findAllSlides(),o.focusSlideByIndex(),o.handleKeyDown(),o.hasMultiplePages=Boolean(o.root.querySelector(".handleNext")),o.root.querySelector(".handlePrev")&&(o.hasMoved=!0),o}return r(t,n),t.prototype.findAllSlides=function(){var o=this;this.slides=i(".slider-item",this.root).filter(function(t){return"-"!==t.className.substr(-1)}),this.currentSlide&&this.slides.forEach(function(t,e){o.currentSlide===t&&(o.currentSlideIndex=e)})},t.prototype.tearDown=function(){u.hide(),this.onActivate=null,c.off("ArrowLeft",this.moveLeft),c.off("ArrowRight",this.moveRight),c.off("Enter",this.activate)},t.prototype.gotoNextSlidePage=function(){var t=this;this.root.querySelector(".handleNext").click(),u.hide(),setTimeout(function(){t.hasMoved=!0,t.findAllSlides(),t.focusSlideByIndex(1)},800)},t.prototype.gotoPrevSlidePage=function(){var t=this;this.root.querySelector(".handlePrev").click(),u.hide(),setTimeout(function(){t.hasMoved=!0,t.findAllSlides(),t.focusSlideByIndex(t.slides.length-2)},800)},t.prototype.focusSlideByIndex=function(t){void 0===t&&(t=0),this.currentSlide&&u.hide(),this.slides.length>t&&(this.currentSlideIndex=t,this.currentSlide=this.slides[t],u.moveToElement(this.currentSlide))},t.prototype.focusNextSlide=function(){if(this.currentSlide){var t=this.hasMultiplePages&&this.root.querySelector(".handleNext.active"),e=t?2:1;this.slides.length-e>this.currentSlideIndex?(this.findAllSlides(),this.focusSlideByIndex(this.currentSlideIndex+1)):t?this.gotoNextSlidePage():console.warn("Cannot move forward; No more Slides!")}else this.focusSlideByIndex()},t.prototype.focusPreviousSlide=function(){if(this.currentSlide){var t=this.hasMultiplePages&&this.hasMoved&&this.root.querySelector(".handlePrev.active"),e=t?1:0;this.currentSlideIndex>e?(this.findAllSlides(),this.focusSlideByIndex(this.currentSlideIndex-1)):t?this.gotoPrevSlidePage():console.warn("Cannot move backwards; No more Slides!")}else this.focusSlideByIndex()},t.prototype.handleKeyDown=function(){c.on("ArrowLeft",this.moveLeft),c.on("ArrowRight",this.moveRight),c.on("Enter",this.activate)},t}(e),o=function(){function t(){var t=this;this.sections=[],this.moveUp=function(){console.log("Move up"),t.focusPreviousSection()},this.moveDown=function(){console.log("Move down"),t.focusNextSection()},this.findSections(),this.focusSectionByIndex(),this.handleKeyDown()}return t.prototype.findSections=function(){var o=this,t=i(".lolomoRow");this.sections=t,this.currentSection&&t.forEach(function(t,e){o.currentSection===t&&(o.currentSectionIndex=e)})},t.prototype.focusSectionByIndex=function(t){var e,o;void 0===t&&(t=0),this.sections.length-1>t&&(this.currentSectionIndex=t,this.currentSection=this.sections[t]),e=this.currentSection,o=function(t){for(var e=0,o=0,n=t;e+=n.offsetTop||0,o+=n.offsetLeft||0,n=n.offsetParent;);return{top:e,left:o}}(e).top,window.scrollTo(0,o-70),this.currentSectionNavigation&&this.currentSectionNavigation.tearDown(),this.currentSection.matches(n.Slider)?this.currentSectionNavigation=new a(this.currentSection,function(t){var e=t.querySelector("a").href;window.location.href=e}):console.log("Unhandeled Section!")},t.prototype.focusNextSection=function(){this.currentSection?(this.findSections(),this.sections.length-1>this.currentSectionIndex?this.focusSectionByIndex(this.currentSectionIndex+1):console.warn("Cannot move down; No more sections!")):this.focusSectionByIndex()},t.prototype.focusPreviousSection=function(){this.currentSection?(this.findSections(),0<this.currentSectionIndex?this.focusSectionByIndex(this.currentSectionIndex-1):console.warn("Cannot move up; No more sections!")):this.focusSectionByIndex()},t.prototype.handleKeyDown=function(){c.on("ArrowUp",this.moveUp),c.on("ArrowDown",this.moveDown)},t}(),f=function(t){function e(){var e=t.call(this)||this;return e.activeTabType="overview",e.active=!1,e.tabs=[],e.activeTabIndex=-1,e.moveLeft=function(){e.active&&0<e.activeTabIndex&&e.focusTabByIndex(e.activeTabIndex-1)},e.moveRight=function(){e.active&&e.tabs.length-1>e.activeTabIndex&&e.focusTabByIndex(e.activeTabIndex+1)},e.activateFocusedTab=function(){var t=e.tabs[e.activeTabIndex];e.setActiveTabType(),t.querySelector("a").click()},e.findTabs(),e.focusTabByIndex(),e.handleKeyDown(),e}return r(e,t),e.prototype.tearDown=function(){c.off("ArrowLeft",this.moveLeft),c.off("ArrowRight",this.moveRight),u.hide()},e.prototype.activate=function(){this.active=!0},e.prototype.deactivate=function(){this.active=!1},e.prototype.getTabType=function(){return this.activeTabType},e.prototype.findTabs=function(){var t=i(".menu > li");this.tabs=t},e.prototype.focusTabByIndex=function(t){void 0===t&&(t=0),this.activeTab&&u.hide(),this.tabs.length>t&&(this.activeTabIndex=t,this.activeTab=this.tabs[t],u.moveToElement(this.activeTab),this.activateFocusedTab())},e.prototype.setActiveTabType=function(){var t=this.activeTab.className.toLowerCase();t.includes("overview")?this.activeTabType="overview":t.includes("episodes")?this.activeTabType="episodes":t.includes("trailer")?this.activeTabType="trailer":t.includes("like")?this.activeTabType="similar":t.includes("detail")&&(this.activeTabType="details")},e.prototype.handleKeyDown=function(){c.on("ArrowLeft",this.moveLeft),c.on("ArrowRight",this.moveRight)},e}(e),l=function(t){function e(){var e=t.call(this)||this;return e.actions=[],e.focusedActionIndex=-1,e.moveRight=function(){e.actions.length-1>e.focusedActionIndex&&e.focusActionByIndex(e.focusedActionIndex+1)},e.moveLeft=function(){0<e.focusedActionIndex&&e.focusActionByIndex(e.focusedActionIndex-1)},e.activeAction=function(){var t=e.focusedAction;t.href?location.href=t.href:t.click()},e.findActions(),e.focusActionByIndex(),e.handleKeyDown(),e}return r(e,t),e.prototype.tearDown=function(){c.off("ArrowLeft",this.moveLeft),c.off("ArrowRight",this.moveRight),c.off("Enter",this.activeAction),u.hide()},e.prototype.findActions=function(){var t=i(".jawbone-actions a");this.actions=t},e.prototype.focusActionByIndex=function(t){void 0===t&&(t=0),this.focusedAction&&u.hide(),this.actions.length>t&&(this.focusedActionIndex=t,this.focusedAction=this.actions[t],u.moveToElement(this.focusedAction))},e.prototype.handleKeyDown=function(){c.on("ArrowLeft",this.moveLeft),c.on("ArrowRight",this.moveRight),c.on("Enter",this.activeAction)},e}(e),h=function(o){function t(t){var e=o.call(this)||this;return e.listItems=[],e.focusedListItemIndex=-1,e.moveUp=function(){e.isMenuOpen()&&0<e.focusedListItemIndex&&e.focusListItemByIndex(e.focusedListItemIndex-1)},e.moveDown=function(){e.isMenuOpen()&&e.listItems.length-1>e.focusedListItemIndex&&e.focusListItemByIndex(e.focusedListItemIndex+1)},e.activate=function(){e.isMenuOpen()&&e.focusedListItem?(e.focusedListItem.querySelector("a")&&e.focusedListItem.querySelector("a")).click():((e.root.querySelector(".label")&&e.root.querySelector(".label")).click(),e.findListItems(),e.focusListItemByIndex())},e.root=t,e.handleKeyDown(),e}return r(t,o),t.prototype.tearDown=function(){c.off("ArrowUp",this.moveUp),c.off("ArrowDown",this.moveDown),c.off("Enter",this.activate)},t.prototype.isAtBottom=function(){return!this.isMenuOpen()},t.prototype.isAtTop=function(){return!this.isMenuOpen()},t.prototype.findListItems=function(){this.listItems=i(".sub-menu-item",this.root)},t.prototype.focusListItemByIndex=function(t){void 0===t&&(t=0),this.focusedListItem&&u.hide(),this.listItems.length>t&&(this.focusedListItemIndex=t,this.focusedListItem=this.listItems[t],u.moveToElement(this.focusedListItem))},t.prototype.isMenuOpen=function(){return Boolean(this.root.querySelector(".sub-menu"))},t.prototype.handleKeyDown=function(){c.on("ArrowUp",this.moveUp),c.on("ArrowDown",this.moveDown),c.on("Enter",this.activate)},t}(e),d=function(e){function t(){var t=e.call(this)||this;return t.focusedSection="episodes",t.moveUp=function(){t.activeNavigation.isAtTop()&&(document.querySelector(".single-season-label")||"episodes"===t.focusedSection&&(t.focusedSection="seasons",t.focusSection()))},t.moveDown=function(){t.activeNavigation.isAtBottom()&&"seasons"===t.focusedSection&&(t.focusedSection="episodes",t.focusSection())},t.focusSection(),t.handleKeyDown(),t}return r(t,e),t.prototype.tearDown=function(){c.off("ArrowUp",this.moveUp),c.off("ArrowDown",this.moveDown)},t.prototype.isAtTop=function(){return"seasons"===this.focusedSection},t.prototype.isAtBottom=function(){return"episodes"===this.focusedSection},t.prototype.focusSection=function(){var t=document.querySelector(".episodesContainer .nfDropDown"),e=document.querySelector(".episodeWrapper");this.activeNavigation&&this.activeNavigation.tearDown(),"seasons"===this.focusedSection?this.activeNavigation=new h(t):this.activeNavigation=new a(e,function(t){var e=t.querySelector("a");e.href?location.href=e.href:e.click()})},t.prototype.handleKeyDown=function(){c.on("ArrowUp",this.moveUp),c.on("ArrowDown",this.moveDown)},t}(e),v=function(){function t(){var t=this;this.activeSection="content",this.focusSection=function(){document.querySelector(".jawBoneCommon"),document.querySelector(".menu");if(t.activeSectionNavigation&&t.activeSectionNavigation.tearDown(),"content"===t.activeSection)switch(t.tablistNavigation.deactivate(),t.tablistNavigation.getTabType()){case"overview":t.activeSectionNavigation=new l;break;case"episodes":t.activeSectionNavigation=new d}else t.tablistNavigation.activate()},this.moveUp=function(){"tablist"===t.activeSection&&(t.activeSection="content",t.focusSection())},this.moveDown=function(){"content"===t.activeSection&&t.activeSectionNavigation.isAtBottom()&&(t.activeSection="tablist",t.focusSection())},this.tablistNavigation=new f,this.focusSection(),this.handleKeyDown()}return t.prototype.tearDown=function(){c.off("ArrowUp",this.moveUp),c.off("ArrowDown",this.moveDown),this.tablistNavigation.tearDown()},t.prototype.handleKeyDown=function(){c.on("ArrowUp",this.moveUp),c.on("ArrowDown",this.moveDown)},t}(),p=function(){function t(){var e=this;this.profiles=[],this.focusedProfileIndex=-1,this.moveRight=function(){e.profiles.length-1>e.focusedProfileIndex&&e.focusProfileByIndex(e.focusedProfileIndex+1)},this.moveLeft=function(){0<e.focusedProfileIndex&&e.focusProfileByIndex(e.focusedProfileIndex-1)},this.activateProfile=function(){var t=e.focusedProfile.querySelector("a");location.href=t.href},this.findProfiles(),this.focusProfileByIndex(),this.handleKeydown()}return t.prototype.findProfiles=function(){this.profiles=i(".profile")},t.prototype.focusProfileByIndex=function(t){void 0===t&&(t=0),this.focusedProfile&&u.hide(),this.profiles.length>t&&(this.focusedProfileIndex=t,this.focusedProfile=this.profiles[t],u.moveToElement(this.focusedProfile))},t.prototype.handleKeydown=function(){c.on("ArrowLeft",this.moveLeft),c.on("ArrowRight",this.moveRight),c.on("Enter",this.activateProfile)},t}();c.init();try{u.init(),(t=location.href).match(/browse/g)?document.querySelector(".profiles-gate-container")?new p:new o:t.match(/title/g)?new v:t.match(/watch/g)&&c.on("Escape",function(){document.querySelector(".button-nfplayerBack").click()});var y=new MutationObserver(function(t){console.log("mutation..."),document.querySelector(".profiles-gate-container")&&location.reload()}),m=document.querySelector("#appMountPoint");y.observe(m,{childList:!0})}catch(t){console.error(t)}c.on("Home",function(){return location.href="https://www.netflix.com/browse"}),c.on("End",function(){return location.reload()})}();
+(function () {
+    'use strict';
+
+    var queryAll = function (selector, root) {
+        var elements = [];
+        var parent = root ? root : document;
+        parent.querySelectorAll(selector).forEach(function (element) { return elements.push(element); });
+        return elements;
+    };
+    var getAbsolutePosition = function (element) {
+        var top = 0;
+        var left = 0;
+        var currentElement = element;
+        do {
+            top += currentElement.offsetTop || 0;
+            left += currentElement.offsetLeft || 0;
+            currentElement = currentElement.offsetParent;
+        } while (currentElement);
+        return { top: top, left: left };
+    };
+    var scrollElementIntoView = function (element) {
+        var top = getAbsolutePosition(element).top;
+        window.scrollTo(0, top - 70);
+    };
+
+    var Keyboard = /** @class */ (function () {
+        function Keyboard() {
+        }
+        Keyboard.init = function () {
+            document.addEventListener("keydown", Keyboard.handleKeyDown);
+        };
+        Keyboard.stop = function () {
+            document.removeEventListener("keydown", Keyboard.handleKeyDown);
+        };
+        Keyboard.on = function (key, handler) {
+            if (!Keyboard.handlerGroups[key]) {
+                Keyboard.handlerGroups[key] = [];
+            }
+            Keyboard.handlerGroups[key].push(handler);
+        };
+        Keyboard.off = function (key, handler) {
+            if (!Keyboard.handlerGroups[key]) {
+                return;
+            }
+            Keyboard.handlerGroups[key] = Keyboard.handlerGroups[key].filter(function (h) { return h !== handler; });
+        };
+        Keyboard.handleKeyDown = function (event) {
+            var key = event.key;
+            if (key.includes("Arrow") || key.includes("Enter")) {
+                event.preventDefault();
+            }
+            if (Keyboard.handlerGroups[key]) {
+                Keyboard.handlerGroups[key].forEach(function (handler) { return handler(event); });
+            }
+        };
+        Keyboard.handlerGroups = {};
+        return Keyboard;
+    }());
+
+    var Selector;
+    (function (Selector) {
+        Selector["Slider"] = ".lolomoRow_title_card:not( .lolomoBigRow )";
+    })(Selector || (Selector = {}));
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    var SectionNavigation = /** @class */ (function () {
+        function SectionNavigation() {
+        }
+        SectionNavigation.prototype.isAtTop = function () {
+            return true;
+        };
+        SectionNavigation.prototype.isAtBottom = function () {
+            return true;
+        };
+        return SectionNavigation;
+    }());
+
+    var FocusIndicator = /** @class */ (function () {
+        function FocusIndicator() {
+        }
+        FocusIndicator.init = function () {
+            var root = document.createElement("div");
+            root.className = "nkc-focus-indicator";
+            root.style.position = "absolute";
+            root.style.borderWidth = "5px";
+            root.style.borderStyle = "solid";
+            root.style.borderImage =
+                "linear-gradient(45deg, #ff5e00 0%, #ffbc00 100%) 1 5% / 1 / 0 stretch";
+            root.style.opacity = "0";
+            root.style.boxSizing = "border-box";
+            document.body.appendChild(root);
+            FocusIndicator.root = root;
+        };
+        FocusIndicator.moveToElement = function (element, zIndex) {
+            var _a = element.getBoundingClientRect(), top = _a.top, left = _a.left;
+            var clientWidth = element.clientWidth, clientHeight = element.clientHeight;
+            var root = FocusIndicator.root;
+            top += window.scrollY;
+            left += window.scrollX;
+            root.style.top = top - 7 + "px";
+            root.style.left = left - 5 + "px";
+            root.style.width = clientWidth + 10 + "px";
+            root.style.height = clientHeight + 14 + "px";
+            root.style.opacity = "1";
+            if (zIndex) {
+                root.style.zIndex = zIndex.toString();
+            }
+        };
+        FocusIndicator.hide = function () {
+            FocusIndicator.root.style.opacity = "0";
+        };
+        return FocusIndicator;
+    }());
+
+    var SliderNavigation = /** @class */ (function (_super) {
+        __extends(SliderNavigation, _super);
+        function SliderNavigation(root, onActivate) {
+            var _this = _super.call(this) || this;
+            _this.hasMultiplePages = false;
+            _this.hasMoved = false;
+            _this.moveLeft = function () {
+                _this.focusPreviousSlide();
+            };
+            _this.moveRight = function () {
+                _this.focusNextSlide();
+            };
+            _this.activate = function () {
+                if (_this.onActivate && _this.currentSlide) {
+                    _this.onActivate(_this.currentSlide);
+                }
+            };
+            _this.root = root;
+            _this.onActivate = onActivate;
+            _this.findAllSlides();
+            _this.focusSlideByIndex();
+            _this.handleKeyDown();
+            _this.hasMultiplePages = Boolean(_this.root.querySelector(".handleNext"));
+            if (_this.root.querySelector(".handlePrev")) {
+                _this.hasMoved = true;
+            }
+            return _this;
+        }
+        SliderNavigation.prototype.findAllSlides = function () {
+            var _this = this;
+            this.slides = queryAll(".slider-item", this.root).filter(function (slide) { return slide.className.substr(-1) !== "-"; });
+            if (this.currentSlide) {
+                this.slides.forEach(function (slide, index) {
+                    if (_this.currentSlide === slide) {
+                        _this.currentSlideIndex = index;
+                    }
+                });
+            }
+        };
+        SliderNavigation.prototype.tearDown = function () {
+            FocusIndicator.hide();
+            this.onActivate = null;
+            Keyboard.off("ArrowLeft", this.moveLeft);
+            Keyboard.off("ArrowRight", this.moveRight);
+            Keyboard.off("Enter", this.activate);
+        };
+        SliderNavigation.prototype.gotoNextSlidePage = function () {
+            var _this = this;
+            this.root.querySelector(".handleNext").click();
+            FocusIndicator.hide();
+            setTimeout(function () {
+                _this.hasMoved = true;
+                _this.findAllSlides();
+                _this.focusSlideByIndex(1);
+            }, 800);
+        };
+        SliderNavigation.prototype.gotoPrevSlidePage = function () {
+            var _this = this;
+            this.root.querySelector(".handlePrev").click();
+            FocusIndicator.hide();
+            setTimeout(function () {
+                _this.hasMoved = true;
+                _this.findAllSlides();
+                _this.focusSlideByIndex(_this.slides.length - 2);
+            }, 800);
+        };
+        SliderNavigation.prototype.focusSlideByIndex = function (index) {
+            if (index === void 0) { index = 0; }
+            if (this.currentSlide) {
+                FocusIndicator.hide();
+            }
+            if (this.slides.length > index) {
+                this.currentSlideIndex = index;
+                this.currentSlide = this.slides[index];
+                FocusIndicator.moveToElement(this.currentSlide);
+            }
+        };
+        SliderNavigation.prototype.focusNextSlide = function () {
+            if (!this.currentSlide) {
+                this.focusSlideByIndex();
+                return;
+            }
+            var canGoPrevPage = this.hasMultiplePages && this.root.querySelector(".handleNext.active");
+            var offset = canGoPrevPage ? 2 : 1;
+            if (this.slides.length - offset > this.currentSlideIndex) {
+                this.findAllSlides();
+                this.focusSlideByIndex(this.currentSlideIndex + 1);
+            }
+            else if (canGoPrevPage) {
+                this.gotoNextSlidePage();
+            }
+            else {
+                console.warn("Cannot move forward; No more Slides!");
+            }
+        };
+        SliderNavigation.prototype.focusPreviousSlide = function () {
+            if (!this.currentSlide) {
+                this.focusSlideByIndex();
+                return;
+            }
+            var canGoNextPage = this.hasMultiplePages && this.hasMoved && this.root.querySelector(".handlePrev.active");
+            var offset = canGoNextPage ? 1 : 0;
+            if (this.currentSlideIndex > offset) {
+                this.findAllSlides();
+                this.focusSlideByIndex(this.currentSlideIndex - 1);
+            }
+            else if (canGoNextPage) {
+                this.gotoPrevSlidePage();
+            }
+            else {
+                console.warn("Cannot move backwards; No more Slides!");
+            }
+        };
+        SliderNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowLeft", this.moveLeft);
+            Keyboard.on("ArrowRight", this.moveRight);
+            Keyboard.on("Enter", this.activate);
+        };
+        return SliderNavigation;
+    }(SectionNavigation));
+
+    var BrowseNavigation = /** @class */ (function () {
+        function BrowseNavigation() {
+            var _this = this;
+            this.sections = [];
+            this.moveUp = function () {
+                console.log("Move up");
+                _this.focusPreviousSection();
+            };
+            this.moveDown = function () {
+                console.log("Move down");
+                _this.focusNextSection();
+            };
+            this.findSections();
+            this.focusSectionByIndex();
+            this.handleKeyDown();
+        }
+        BrowseNavigation.prototype.findSections = function () {
+            var _this = this;
+            var sections = queryAll(".lolomoRow");
+            this.sections = sections;
+            if (this.currentSection) {
+                sections.forEach(function (section, index) {
+                    if (_this.currentSection === section) {
+                        _this.currentSectionIndex = index;
+                    }
+                });
+            }
+        };
+        BrowseNavigation.prototype.focusSectionByIndex = function (index) {
+            if (index === void 0) { index = 0; }
+            if (this.sections.length - 1 > index) {
+                this.currentSectionIndex = index;
+                this.currentSection = this.sections[index];
+            }
+            scrollElementIntoView(this.currentSection);
+            if (this.currentSectionNavigation) {
+                this.currentSectionNavigation.tearDown();
+            }
+            if (this.currentSection.matches(Selector.Slider)) {
+                this.currentSectionNavigation = new SliderNavigation(this.currentSection, function (slide) {
+                    var href = slide.querySelector("a").href;
+                    window.location.href = href;
+                });
+            }
+            else {
+                console.log("Unhandeled Section!");
+            }
+        };
+        BrowseNavigation.prototype.focusNextSection = function () {
+            if (!this.currentSection) {
+                this.focusSectionByIndex();
+                return;
+            }
+            this.findSections();
+            if (this.sections.length - 1 > this.currentSectionIndex) {
+                this.focusSectionByIndex(this.currentSectionIndex + 1);
+            }
+            else {
+                console.warn("Cannot move down; No more sections!");
+            }
+        };
+        BrowseNavigation.prototype.focusPreviousSection = function () {
+            if (!this.currentSection) {
+                this.focusSectionByIndex();
+                return;
+            }
+            this.findSections();
+            if (this.currentSectionIndex > 0) {
+                this.focusSectionByIndex(this.currentSectionIndex - 1);
+            }
+            else {
+                console.warn("Cannot move up; No more sections!");
+            }
+        };
+        BrowseNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowUp", this.moveUp);
+            Keyboard.on("ArrowDown", this.moveDown);
+        };
+        return BrowseNavigation;
+    }());
+
+    var TablistNavigation = /** @class */ (function (_super) {
+        __extends(TablistNavigation, _super);
+        function TablistNavigation() {
+            var _this = _super.call(this) || this;
+            _this.activeTabType = "overview";
+            _this.active = false;
+            _this.tabs = [];
+            _this.activeTabIndex = -1;
+            _this.moveLeft = function () {
+                if (!_this.active)
+                    return;
+                if (_this.activeTabIndex > 0) {
+                    _this.focusTabByIndex(_this.activeTabIndex - 1);
+                }
+            };
+            _this.moveRight = function () {
+                if (!_this.active)
+                    return;
+                if (_this.tabs.length - 1 > _this.activeTabIndex) {
+                    _this.focusTabByIndex(_this.activeTabIndex + 1);
+                }
+            };
+            _this.activateFocusedTab = function () {
+                var activeTab = _this.tabs[_this.activeTabIndex];
+                _this.setActiveTabType();
+                activeTab.querySelector("a").click();
+            };
+            _this.findTabs();
+            _this.focusTabByIndex();
+            _this.handleKeyDown();
+            return _this;
+        }
+        TablistNavigation.prototype.tearDown = function () {
+            Keyboard.off("ArrowLeft", this.moveLeft);
+            Keyboard.off("ArrowRight", this.moveRight);
+            FocusIndicator.hide();
+        };
+        TablistNavigation.prototype.activate = function () {
+            this.active = true;
+        };
+        TablistNavigation.prototype.deactivate = function () {
+            this.active = false;
+        };
+        TablistNavigation.prototype.getTabType = function () {
+            return this.activeTabType;
+        };
+        TablistNavigation.prototype.findTabs = function () {
+            var tabs = queryAll(".menu > li");
+            this.tabs = tabs;
+        };
+        TablistNavigation.prototype.focusTabByIndex = function (index) {
+            if (index === void 0) { index = 0; }
+            if (this.activeTab) {
+                FocusIndicator.hide();
+            }
+            if (this.tabs.length > index) {
+                this.activeTabIndex = index;
+                this.activeTab = this.tabs[index];
+                FocusIndicator.moveToElement(this.activeTab);
+                this.activateFocusedTab();
+            }
+        };
+        TablistNavigation.prototype.setActiveTabType = function () {
+            var tabClass = this.activeTab.className.toLowerCase();
+            if (tabClass.includes("overview")) {
+                this.activeTabType = "overview";
+            }
+            else if (tabClass.includes("episodes")) {
+                this.activeTabType = "episodes";
+            }
+            else if (tabClass.includes("trailer")) {
+                this.activeTabType = "trailer";
+            }
+            else if (tabClass.includes("like")) {
+                this.activeTabType = "similar";
+            }
+            else if (tabClass.includes("detail")) {
+                this.activeTabType = "details";
+            }
+        };
+        TablistNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowLeft", this.moveLeft);
+            Keyboard.on("ArrowRight", this.moveRight);
+        };
+        return TablistNavigation;
+    }(SectionNavigation));
+
+    var TitleOverviewNavigation = /** @class */ (function (_super) {
+        __extends(TitleOverviewNavigation, _super);
+        function TitleOverviewNavigation() {
+            var _this = _super.call(this) || this;
+            _this.actions = [];
+            _this.focusedActionIndex = -1;
+            _this.moveRight = function () {
+                if (_this.actions.length - 1 > _this.focusedActionIndex) {
+                    _this.focusActionByIndex(_this.focusedActionIndex + 1);
+                }
+            };
+            _this.moveLeft = function () {
+                if (_this.focusedActionIndex > 0) {
+                    _this.focusActionByIndex(_this.focusedActionIndex - 1);
+                }
+            };
+            _this.activeAction = function () {
+                var action = _this.focusedAction;
+                if (action.href) {
+                    location.href = action.href;
+                }
+                else {
+                    action.click();
+                }
+            };
+            _this.findActions();
+            _this.focusActionByIndex();
+            _this.handleKeyDown();
+            return _this;
+        }
+        TitleOverviewNavigation.prototype.tearDown = function () {
+            Keyboard.off("ArrowLeft", this.moveLeft);
+            Keyboard.off("ArrowRight", this.moveRight);
+            Keyboard.off("Enter", this.activeAction);
+            FocusIndicator.hide();
+        };
+        TitleOverviewNavigation.prototype.findActions = function () {
+            var actions = queryAll('.jawbone-actions a');
+            this.actions = actions;
+        };
+        TitleOverviewNavigation.prototype.focusActionByIndex = function (index) {
+            if (index === void 0) { index = 0; }
+            if (this.focusedAction) {
+                FocusIndicator.hide();
+            }
+            if (this.actions.length > index) {
+                this.focusedActionIndex = index;
+                this.focusedAction = this.actions[index];
+                FocusIndicator.moveToElement(this.focusedAction);
+            }
+        };
+        TitleOverviewNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowLeft", this.moveLeft);
+            Keyboard.on("ArrowRight", this.moveRight);
+            Keyboard.on("Enter", this.activeAction);
+        };
+        return TitleOverviewNavigation;
+    }(SectionNavigation));
+
+    var DropdownNavigation = /** @class */ (function (_super) {
+        __extends(DropdownNavigation, _super);
+        function DropdownNavigation(root) {
+            var _this = _super.call(this) || this;
+            _this.listItems = [];
+            _this.focusedListItemIndex = -1;
+            _this.moveUp = function () {
+                if (!_this.isMenuOpen())
+                    return;
+                if (_this.focusedListItemIndex > 0) {
+                    _this.focusListItemByIndex(_this.focusedListItemIndex - 1);
+                }
+            };
+            _this.moveDown = function () {
+                if (!_this.isMenuOpen())
+                    return;
+                if (_this.listItems.length - 1 > _this.focusedListItemIndex) {
+                    _this.focusListItemByIndex(_this.focusedListItemIndex + 1);
+                }
+            };
+            _this.activate = function () {
+                if (_this.isMenuOpen() && _this.focusedListItem) {
+                    (_this.focusedListItem.querySelector("a") && _this.focusedListItem.querySelector("a")).click();
+                }
+                else {
+                    (_this.root.querySelector(".label") && _this.root.querySelector(".label")).click();
+                    _this.findListItems();
+                    _this.focusListItemByIndex();
+                }
+            };
+            _this.root = root;
+            _this.handleKeyDown();
+            return _this;
+        }
+        DropdownNavigation.prototype.tearDown = function () {
+            Keyboard.off("ArrowUp", this.moveUp);
+            Keyboard.off("ArrowDown", this.moveDown);
+            Keyboard.off("Enter", this.activate);
+        };
+        DropdownNavigation.prototype.isAtBottom = function () {
+            return !this.isMenuOpen();
+        };
+        DropdownNavigation.prototype.isAtTop = function () {
+            return !this.isMenuOpen();
+        };
+        DropdownNavigation.prototype.findListItems = function () {
+            this.listItems = queryAll(".sub-menu-item", this.root);
+        };
+        DropdownNavigation.prototype.focusListItemByIndex = function (index) {
+            if (index === void 0) { index = 0; }
+            if (this.focusedListItem) {
+                FocusIndicator.hide();
+            }
+            if (this.listItems.length > index) {
+                this.focusedListItemIndex = index;
+                this.focusedListItem = this.listItems[index];
+                FocusIndicator.moveToElement(this.focusedListItem);
+            }
+        };
+        DropdownNavigation.prototype.isMenuOpen = function () {
+            return Boolean(this.root.querySelector(".sub-menu"));
+        };
+        DropdownNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowUp", this.moveUp);
+            Keyboard.on("ArrowDown", this.moveDown);
+            Keyboard.on("Enter", this.activate);
+        };
+        return DropdownNavigation;
+    }(SectionNavigation));
+
+    var EpisodeNavigation = /** @class */ (function (_super) {
+        __extends(EpisodeNavigation, _super);
+        function EpisodeNavigation() {
+            var _this = _super.call(this) || this;
+            _this.focusedSection = "episodes";
+            _this.moveUp = function () {
+                if (!_this.activeNavigation.isAtTop())
+                    return;
+                if (document.querySelector(".single-season-label"))
+                    return;
+                if (_this.focusedSection === "episodes") {
+                    _this.focusedSection = "seasons";
+                    _this.focusSection();
+                }
+            };
+            _this.moveDown = function () {
+                if (!_this.activeNavigation.isAtBottom())
+                    return;
+                if (_this.focusedSection === "seasons") {
+                    _this.focusedSection = "episodes";
+                    _this.focusSection();
+                }
+            };
+            _this.focusSection();
+            _this.handleKeyDown();
+            return _this;
+        }
+        EpisodeNavigation.prototype.tearDown = function () {
+            Keyboard.off("ArrowUp", this.moveUp);
+            Keyboard.off("ArrowDown", this.moveDown);
+        };
+        EpisodeNavigation.prototype.isAtTop = function () {
+            return this.focusedSection === "seasons";
+        };
+        EpisodeNavigation.prototype.isAtBottom = function () {
+            return this.focusedSection === "episodes";
+        };
+        EpisodeNavigation.prototype.focusSection = function () {
+            var seasonList = document.querySelector(".episodesContainer .nfDropDown");
+            var episodeSlider = document.querySelector(".episodeWrapper");
+            if (this.activeNavigation) {
+                this.activeNavigation.tearDown();
+            }
+            if (this.focusedSection === "seasons") {
+                this.activeNavigation = new DropdownNavigation(seasonList);
+            }
+            else {
+                this.activeNavigation = new SliderNavigation(episodeSlider, function (slide) {
+                    var link = slide.querySelector("a");
+                    if (link.href) {
+                        location.href = link.href;
+                    }
+                    else {
+                        link.click();
+                    }
+                });
+            }
+        };
+        EpisodeNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowUp", this.moveUp);
+            Keyboard.on("ArrowDown", this.moveDown);
+        };
+        return EpisodeNavigation;
+    }(SectionNavigation));
+
+    var TitleNavigation = /** @class */ (function () {
+        function TitleNavigation() {
+            var _this = this;
+            this.activeSection = "content";
+            this.focusSection = function () {
+                var jb = document.querySelector(".jawBoneCommon");
+                var tl = document.querySelector(".menu");
+                if (_this.activeSectionNavigation) {
+                    _this.activeSectionNavigation.tearDown();
+                }
+                if (_this.activeSection === "content") {
+                    _this.tablistNavigation.deactivate();
+                    switch (_this.tablistNavigation.getTabType()) {
+                        case "overview":
+                            _this.activeSectionNavigation = new TitleOverviewNavigation();
+                            break;
+                        case "episodes":
+                            _this.activeSectionNavigation = new EpisodeNavigation();
+                            break;
+                    }
+                }
+                else {
+                    _this.tablistNavigation.activate();
+                }
+            };
+            this.moveUp = function () {
+                if (_this.activeSection === "tablist") {
+                    _this.activeSection = "content";
+                    _this.focusSection();
+                }
+            };
+            this.moveDown = function () {
+                if (_this.activeSection === "content" && _this.activeSectionNavigation.isAtBottom()) {
+                    _this.activeSection = "tablist";
+                    _this.focusSection();
+                }
+            };
+            this.tablistNavigation = new TablistNavigation();
+            this.focusSection();
+            this.handleKeyDown();
+        }
+        TitleNavigation.prototype.tearDown = function () {
+            Keyboard.off("ArrowUp", this.moveUp);
+            Keyboard.off("ArrowDown", this.moveDown);
+            this.tablistNavigation.tearDown();
+        };
+        TitleNavigation.prototype.handleKeyDown = function () {
+            Keyboard.on("ArrowUp", this.moveUp);
+            Keyboard.on("ArrowDown", this.moveDown);
+        };
+        return TitleNavigation;
+    }());
+
+    var ProfileNavigation = /** @class */ (function () {
+        function ProfileNavigation() {
+            var _this = this;
+            this.profiles = [];
+            this.focusedProfileIndex = -1;
+            this.moveRight = function () {
+                if (_this.profiles.length - 1 > _this.focusedProfileIndex) {
+                    _this.focusProfileByIndex(_this.focusedProfileIndex + 1);
+                }
+            };
+            this.moveLeft = function () {
+                if (_this.focusedProfileIndex > 0) {
+                    _this.focusProfileByIndex(_this.focusedProfileIndex - 1);
+                }
+            };
+            this.activateProfile = function () {
+                var link = _this.focusedProfile.querySelector("a");
+                location.href = link.href;
+            };
+            this.findProfiles();
+            this.focusProfileByIndex();
+            this.handleKeydown();
+        }
+        ProfileNavigation.prototype.findProfiles = function () {
+            this.profiles = queryAll(".profile");
+        };
+        ProfileNavigation.prototype.focusProfileByIndex = function (index) {
+            if (index === void 0) { index = 0; }
+            if (this.focusedProfile) {
+                FocusIndicator.hide();
+            }
+            if (this.profiles.length > index) {
+                this.focusedProfileIndex = index;
+                this.focusedProfile = this.profiles[index];
+                FocusIndicator.moveToElement(this.focusedProfile);
+            }
+        };
+        ProfileNavigation.prototype.handleKeydown = function () {
+            Keyboard.on("ArrowLeft", this.moveLeft);
+            Keyboard.on("ArrowRight", this.moveRight);
+            Keyboard.on("Enter", this.activateProfile);
+        };
+        return ProfileNavigation;
+    }());
+
+    var PlayerNavigation = /** @class */ (function () {
+        function PlayerNavigation() {
+            var _this = this;
+            this.skipCreditsVisible = false;
+            this.checkSkipIntro = function () {
+                var elem = document.querySelector(".skip-credits");
+                if (elem && !_this.skipCreditsVisible) {
+                    _this.skipCreditsVisible = true;
+                }
+                else {
+                    _this.skipCreditsVisible = false;
+                }
+            };
+            this.handleEnter = function (event) {
+                if (!_this.skipCreditsVisible)
+                    return;
+                event.stopImmediatePropagation();
+                event.stopPropagation();
+                var elem = document.querySelector(".skip-credits a");
+                elem.click();
+                _this.skipCreditsVisible = false;
+            };
+            this.handleKeydown();
+            this.watchMutations();
+        }
+        PlayerNavigation.prototype.watchMutations = function () {
+            var _this = this;
+            var observer = new MutationObserver(function () {
+                _this.checkSkipIntro();
+            });
+            observer.observe(document.querySelector("#appMountPoint"), {
+                childList: true,
+                subtree: true
+            });
+        };
+        PlayerNavigation.prototype.handleKeydown = function () {
+            Keyboard.on("Enter", this.handleEnter);
+        };
+        return PlayerNavigation;
+    }());
+
+    Keyboard.init();
+    try {
+        var matchUrl = function (url) {
+            if (url.match(/browse/g)) {
+                if (document.querySelector(".profiles-gate-container")) {
+                    new ProfileNavigation();
+                }
+                else {
+                    new BrowseNavigation();
+                }
+            }
+            else if (url.match(/title/g)) {
+                new TitleNavigation();
+            }
+            else if (url.match(/watch/g)) {
+                new PlayerNavigation();
+                Keyboard.on("Escape", function () {
+                    document.querySelector(".button-nfplayerBack").click();
+                });
+            }
+        };
+        FocusIndicator.init();
+        matchUrl(location.href);
+        var observer = new MutationObserver(function (mutations) {
+            console.log("mutation...");
+            if (document.querySelector(".profiles-gate-container")) {
+                location.reload();
+            }
+        });
+        var root = document.querySelector("#appMountPoint");
+        observer.observe(root, {
+            childList: true
+        });
+    }
+    catch (e) {
+        console.error(e);
+    }
+    Keyboard.on("Home", function () { return (location.href = "https://www.netflix.com/browse"); });
+    Keyboard.on("End", function () { return location.reload(); });
+
+}());
