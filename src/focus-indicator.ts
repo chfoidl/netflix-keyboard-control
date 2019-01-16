@@ -8,7 +8,8 @@ export class FocusIndicator {
         root.style.position = "absolute";
         root.style.borderWidth = "5px";
         root.style.borderStyle = "solid";
-        root.style.borderImage = "linear-gradient(45deg, #ff5e00 0%, #ffbc00 100%) 1 5% / 1 / 0 stretch"
+        root.style.borderImage =
+            "linear-gradient(45deg, #ff5e00 0%, #ffbc00 100%) 1 5% / 1 / 0 stretch";
         root.style.opacity = "0";
         root.style.boxSizing = "border-box";
 
@@ -17,7 +18,7 @@ export class FocusIndicator {
         FocusIndicator.root = root;
     }
 
-    public static moveToElement(element: HTMLElement) {
+    public static moveToElement(element: HTMLElement, zIndex?: number) {
         let { top, left } = element.getBoundingClientRect();
         const { clientWidth, clientHeight } = element;
         const root = FocusIndicator.root;
@@ -30,6 +31,10 @@ export class FocusIndicator {
         root.style.width = `${clientWidth + 10}px`;
         root.style.height = `${clientHeight + 14}px`;
         root.style.opacity = "1";
+
+        if (zIndex) {
+            root.style.zIndex = zIndex.toString();
+        }
     }
 
     public static hide() {
